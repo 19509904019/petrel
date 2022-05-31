@@ -14,6 +14,11 @@
 """
 import requests  # 数据请求模块
 import prettytable as pt  # 表格格式的输出
+import urllib.request as r
+
+# 由于火车站使用三字码，所以我们需要先获取站点对应的三字码
+code_url = r"https://kyfw.12306.cn/otn/resources/js/framework/station_name.js"
+code_data = r.urlopen(code_url).read().decode('utf-8')
 
 """
 发送请求，对于刚刚分析得到url地址发送请求
