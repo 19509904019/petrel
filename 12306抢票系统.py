@@ -12,14 +12,23 @@
         3.解析数据，提取我们想要的数据内容
         4.格式化输出效果
 """
+import json
 import requests  # 数据请求模块
 import prettytable as pt  # 表格格式的输出
-import urllib.request as r
+from selenium import webdriver
 
-# 由于火车站使用三字码，所以我们需要先获取站点对应的三字码
-code_url = r"https://kyfw.12306.cn/otn/resources/js/framework/station_name.js"
-code_data = r.urlopen(code_url).read().decode('utf-8')
-
+# -------------------查票------------------------
+f = open('city.json', encoding='UTF-8')  # 获得所有城市三字码
+txt = f.read()  # <class 'str'>
+json_data = json.loads(txt)  # 转成字典数据类型
+from_station = input("输入起始站：")
+# from_station = '芜湖'
+to_station = input("输入终点站：")
+# to_station = '南京'
+time = input("输入出发的日期，例如：2022-06-01:")
+# time = "2022-06-01"
+# print(json_data[from_station])
+# print(json_data[to_station])
 """
 发送请求，对于刚刚分析得到url地址发送请求
     python爬虫发送请求：模拟浏览器对于url地址发送请求
@@ -30,7 +39,7 @@ code_data = r.urlopen(code_url).read().decode('utf-8')
 当你请求数据之后，虽然返回<Response [200]> 但是不一定得到你想要数据内容，得到的数据不是想要的说明被反爬了
 """
 # 1. 发送请求
-url = r'https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2022-06-01&leftTicketDTO.from_station=NKH&leftTicketDTO.to_station=ENH&purpose_codes=ADULT'
+url = rf'https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date={time}&leftTicketDTO.from_station={json_data[from_station]}&leftTicketDTO.to_station={json_data[to_station]}&purpose_codes=ADULT'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36',
     'Cookie': '_uab_collina=165400073607379238874316; JSESSIONID=E0CC58164BAC46E4FA1D11C1D4BB4B21; RAIL_EXPIRATION=1654288609235; RAIL_DEVICEID=DVZzIsY_rjCELsAKZ32A2Glrd4Y5sHsdWc7tPqJOgvp8OLK4VT-FKv1vtbAwKHpyTvpBbsxzfucbRMNO0704vCqGu1quu0ADREQTRyrZvsvUbUNdTB8FTKAlUVXORTsVd4ojbjBnBArF12a7NmzUtw52GXBO9UeA; BIGipServerpassport=954728714.50215.0000; guidesStatus=off; highContrastMode=defaltMode; cursorStatus=off; route=9036359bb8a8a461c164a04f8f50b252; _jc_save_toDate=2022-05-31; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u5357%u4EAC%u5357%2CNKH; _jc_save_toStation=%u5408%u80A5%u5357%2CENH; _jc_save_fromDate=2022-06-01; BIGipServerotn=3788964106.50210.0000'
@@ -49,11 +58,11 @@ tb.field_names = [
     '出发时间',
     '到达时间',
     '耗时',
-    '软卧',
-    '硬卧',
     '特等座',
     '一等座',
     '二等座',
+    '软卧',
+    '硬卧',
     '硬座',
     '无座'
 ]
@@ -71,33 +80,25 @@ for index in response.json()['data']['result'][2:]:  # 把列表里面的元素�
     second_class = info[30]  # 二等座
     hard_seat = info[29]  # 硬座
     no_seat = info[26]  # 无座
-    dit = {
-        '车次': num,
-        '出发时间': start_time,
-        '到达时间': end_time,
-        '耗时': use_time,
-        '软卧': soft_sleep,
-        '硬卧': hard_sleep,
-        '特等座': topGrade,
-        '一等座': first_class,
-        '二等座': second_class,
-        '硬座': hard_seat,
-        '无座': no_seat
-    }
-    # print(dit)
     tb.add_row([
         num,
         start_time,
         end_time,
         use_time,
-        soft_sleep,
-        hard_sleep,
         topGrade,
         first_class,
         second_class,
+        soft_sleep,
+        hard_sleep,
         hard_seat,
         no_seat
     ])
-print(tb)
 
 # 4.格式化输出效果
+# print(tb)
+#
+
+
+# -------------------抢票------------------------
+driver = webdriver.Chrome()
+driver.get('https://kyfw.12306.cn/otn/resources/login.html')
