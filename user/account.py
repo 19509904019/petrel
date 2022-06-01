@@ -1,2 +1,7 @@
-username = 19509904019
-password = 'YUJUN1998'
+"""
+请在此输入您的正确用户信息
+
+"""
+
+username = 123456
+password = '123456'
