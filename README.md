@@ -41,6 +41,7 @@
         使用模块GetTicket.py进行封装，便于在MainSystem.py中进行复用
          
   使用方法：
+  
       1.在MainSystem.py中运行，为了防止误操作，我在代码中使用了人工手动填写始发站、终点站以及日期，如果想实现自动抢票，可以在代码中将始
       发站、终点站以及日期进行固定，存放在main文件夹下，其中GetTicket.py为买票过程，被引用在MainSystem.py中
       
