@@ -1,43 +1,21 @@
-"""
-爬虫最基本思路流程：
-
-    一、数据来源分析
-        车票信息数据内容
-        1.F12或者鼠标右键点击检查选择network，然后刷新一下网页数据，让我们的数据包重新加载出来
-        2.通过搜索数据，找到相应的数据包，然后查看url地址、请求方式，以及请求头参数
-
-    二、代码实现的过程
-        1.发送请求，对于刚刚分析得到url地址发送请求
-        2.获取数据，获取服务器返回响应数据
-        3.解析数据，提取我们想要的数据内容
-        4.格式化输出效果
-"""
 import json
 import requests
 import prettytable as pt
 
-
 # -------------------查票------------------------
 f = open('../file/city.json', encoding='UTF-8')  # 获得所有城市三字码
-txt = f.read()  # <class 'str'>
-json_data = json.loads(txt)  # 转成字典数据类型
-# from_station = input("输入起始站：")
-from_station = '芜湖'
-# to_station = input("输入终点站：")
-to_station = '南京'
-# date = input("输入出发的日期，例如：2022-06-01:")
-date = "2022-06-02"
+city = f.read()  # <class 'str'>
+json_data = json.loads(city)  # 转成字典数据类型
+from_station = input("输入起始站，例如：芜湖:")
+# from_station = '芜湖'
+to_station = input("输入终点站例如：南京:")
+# to_station = '南京'
+date = input("输入出发的日期，例如：2022-06-01:")
+# date = "2022-06-02"
+
 # print(json_data[from_station])
 # print(json_data[to_station])
-"""
-发送请求，对于刚刚分析得到url地址发送请求
-    python爬虫发送请求：模拟浏览器对于url地址发送请求
-请求头:伪装python代码，让它伪装一个浏览器去发送请求
-    字典的数据类型，构建完整键值对形式
-    User-Agent:用户代理，浏览器基本身份标识
-    Cookie:用户信息，常用于检测是否登陆账号
-当你请求数据之后，虽然返回<Response [200]> 但是不一定得到你想要数据内容，得到的数据不是想要的说明被反爬了
-"""
+
 # 1. 发送请求
 url = rf'https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date={date}&leftTicketDTO.from_station={json_data[from_station]}&leftTicketDTO.to_station={json_data[to_station]}&purpose_codes=ADULT'
 headers = {
@@ -49,7 +27,7 @@ response = requests.get(url=url, headers=headers)
 # print(response)  # <Response [200]> 请求成功，返回响应对象
 
 # 2. 获取数据
-print(response.json())  # 报错，不是完整json数据格式，因为没有加Cookie，加了Cookie获得完整数据
+print(response.json())  # 不加Cookie此处会报错
 
 # 3. 解析数据，提取我们想要的数据内容
 tb = pt.PrettyTable()
@@ -103,8 +81,8 @@ for index in response.json()['data']['result']:  # 把列表里面的元素提�
 print(tb)
 
 # --------抢票---------
-choose = input("请选择你想要购买的车票：")
+choose = input("请选择你想要购买的车票的序号：")
 # 进行买票
 import GetTicket
-GetTicket.get_ticket(int(choose), from_station, to_station, date)
 
+GetTicket.get_ticket(int(choose), from_station, to_station, date)

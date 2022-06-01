@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-
 # 浏览器设置
 s = Service(r'../driver/chromedriver.exe')
 driver = webdriver.Chrome(service=s)
@@ -18,7 +17,6 @@ driver.get(url_str)
 driver.maximize_window()
 
 
-# 浏览器设置结束
 def get_ticket(page, from_station, to_station, date):
     # 输入账号和密码
     driver.find_element(by=By.CSS_SELECTOR, value='#J-userName').send_keys(account.username)
@@ -70,4 +68,4 @@ def get_ticket(page, from_station, to_station, date):
     driver.find_element(by=By.CSS_SELECTOR, value='#erdeng1 > ul:nth-child(4) > li:nth-child(2) a').click()
 
     # 确认订单
-    # driver.find_element(by=By.CSS_SELECTOR, value='#qr_submit_id').click()
+    driver.find_element(by=By.CSS_SELECTOR, value='#qr_submit_id').click()
