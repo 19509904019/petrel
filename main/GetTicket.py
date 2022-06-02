@@ -1,3 +1,5 @@
+from selenium.webdriver import ActionChains
+
 from user import account
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -25,6 +27,13 @@ def get_ticket(page, from_station, to_station, date):
     # 点击登录
     driver.find_element(by=By.CSS_SELECTOR, value='#J-login').click()
     driver.implicitly_wait(10)
+
+    # 拖动验证滑块
+    action = ActionChains(driver)
+    action.click_and_hold(driver.find_element(by=By.CSS_SELECTOR, value='#nc_1_n1z'))
+    action.move_by_offset(0, driver.find_element(by=By.CSS_SELECTOR, value='#nc_1__scale_text').size.get('width'))
+    action.release()
+    action.perform()
 
     # 取消页面提示信息
     driver.find_element(by=By.CSS_SELECTOR, value='.modal-ft .btn').click()
