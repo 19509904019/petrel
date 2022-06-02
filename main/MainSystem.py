@@ -11,7 +11,7 @@ from_station = input("输入起始站，例如：芜湖:")
 to_station = input("输入终点站例如：南京:")
 # to_station = '南京'
 date = input("输入出发的日期，例如：2022-06-01:")
-# date = "2022-06-02"
+# date = "2022-06-03"
 
 # print(json_data[from_station])
 # print(json_data[to_station])

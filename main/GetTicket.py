@@ -1,5 +1,5 @@
+import time
 from selenium.webdriver import ActionChains
-
 from user import account
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -29,18 +29,21 @@ def get_ticket(page, from_station, to_station, date):
     driver.implicitly_wait(10)
 
     # 拖动验证滑块
+    elem1 = driver.find_element(By.CSS_SELECTOR, '#nc_1_n1z')
+    elem2 = driver.find_element(By.CSS_SELECTOR, '#nc_1__scale_text')
+    time.sleep(1)
     action = ActionChains(driver)
-    action.click_and_hold(driver.find_element(by=By.CSS_SELECTOR, value='#nc_1_n1z'))
-    action.move_by_offset(0, driver.find_element(by=By.CSS_SELECTOR, value='#nc_1__scale_text').size.get('width'))
+    action.click_and_hold(elem1)
+    action.move_by_offset(elem2.size.get('width') - 40, 0)
     action.release()
     action.perform()
+    driver.implicitly_wait(10)
 
     # 取消页面提示信息
-    driver.find_element(by=By.CSS_SELECTOR, value='.modal-ft .btn').click()
+    driver.find_element(by=By.CSS_SELECTOR, value='.modal-close .icon').click()
 
     # 买票
     driver.find_element(by=By.CSS_SELECTOR, value='#link_for_ticket').click()
-    driver.implicitly_wait(10)
 
     # 始发站
     driver.find_element(by=By.CSS_SELECTOR, value='#fromStationText').send_keys(Keys.ENTER)
@@ -75,6 +78,8 @@ def get_ticket(page, from_station, to_station, date):
 
     # 选座
     driver.find_element(by=By.CSS_SELECTOR, value='#erdeng1 > ul:nth-child(4) > li:nth-child(2) a').click()
+    driver.implicitly_wait(10)
 
     # 确认订单
+    time.sleep(0.1)
     driver.find_element(by=By.CSS_SELECTOR, value='#qr_submit_id').click()
