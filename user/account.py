@@ -3,5 +3,5 @@
 用在GetTicket.py中
 """
 
-username = 12345
-password = '12345'
+username = 19509904019
+password = '123456'
